@@ -30,7 +30,7 @@ let keywords;
 let locations = [];
 
 //all words in the body array
-let bodyText = [];
+let bodyText = "";
 
 //found locations array
 let foundLocations = [];
@@ -43,24 +43,6 @@ let linkCount = 0;
 
 //keeping a track of already visited urls
 const seenUrls = {};
-
-//fetching all the locations from db
-const getLocations = async () => {
-	const allLocations = await Location.find({});
-	allLocations.forEach((l) => {
-		locations.push(l.location);
-	});
-};
-getLocations();
-
-//reading keywords from the text file
-const readKeyWords = () => {
-	const kWords = fs
-		.readFileSync(__dirname + "/files/keywords.txt", "utf8")
-		.split("\n");
-	keywords = kWords;
-};
-readKeyWords();
 
 //sanitising the urls
 const getUrl = (link, host, protocol) => {
@@ -100,7 +82,7 @@ const crawl = async ({ url, ignore }) => {
 	const getBody = $("body p, h1, h2, h3, h4, h5, h6").each((i, e) => {
 		const item = $(e).text();
 		//console.log("item", item);
-		bodyText.push(item);
+		bodyText = bodyText + " " + item;
 	});
 
 	//creating arry from found locations
@@ -182,4 +164,27 @@ const initialLinkCrwal = (initialU) => {
 	}
 };
 
-initialLinkCrwal("http://localhost:10000/index.html");
+//reading keywords from the text file
+const readKeyWords = () => {
+	const kWords = fs
+		.readFileSync(__dirname + "/files/keywords.txt", "utf8")
+		.split("\n");
+	keywords = kWords;
+
+	if (keywords.length !== 0) {
+		initialLinkCrwal("https://www.srilanka.travel/");
+	}
+};
+
+//fetching all the locations from db
+const getLocations = async () => {
+	const allLocations = await Location.find({});
+	allLocations.forEach((l) => {
+		locations.push(l.location);
+	});
+
+	if (allLocations) {
+		readKeyWords();
+	}
+};
+getLocations();
