@@ -99,7 +99,10 @@ const crawl = async (url, isMain = false) => {
 const callCrawl = async () => {
 	await connectDB();
 	//include a list of urls here
-	const urls = ["https://www.srilanka.travel/", "http://www.methma.tech/"];
+	const urls = [
+		"https://www.srilanka.travel/",
+		"https://www.lonelyplanet.com/sri-lanka",
+	];
 	for (let url of urls) {
 		crawl(url, true);
 		console.log("dhnhjjvhjvhv");
