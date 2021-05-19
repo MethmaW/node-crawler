@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
+const dotenv = require("dotenv");
 
-const connectDB = () => {
+dotenv.config();
+
+const connectDB = async () => {
 	const uri = process.env.DB_URI;
 
 	try {
